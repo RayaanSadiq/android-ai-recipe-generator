@@ -1,4 +1,4 @@
-package com.example.recipeai
+package com.rayaans.recipeai
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,4 +1,4 @@
-package com.example.recipeai
+package com.rayaans.recipeai
 
 import org.junit.Test
 
