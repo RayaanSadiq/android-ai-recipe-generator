@@ -19,9 +19,15 @@ import com.rayaans.recipeai.ui.saved.SavedScreen
 import com.rayaans.recipeai.ui.Screens
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
 import com.rayaans.recipeai.ui.ingredients.IngredientsViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,26 +36,31 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val ingredientsViewModel = IngredientsViewModel()
+            val backStackEntry by navController.currentBackStackEntryAsState()
+            val currentScreen = backStackEntry?.destination?.route
 
             Scaffold( bottomBar = {
                 NavigationBar {
                     NavigationBarItem(
-                        selected = false,
+                        selected = currentScreen == Screens.Ingredients.name,
                         onClick = { navController.navigate(Screens.Ingredients.name) },
                         label = { Text("Ingredients") },
-                        icon = {}
+                        icon = {Icon(imageVector = Icons.AutoMirrored.Filled.List,
+                            contentDescription = "Ingredients")}
                     )
                     NavigationBarItem(
-                        selected = false,
+                        selected = currentScreen == Screens.Recipe.name,
                         onClick = { navController.navigate(Screens.Recipe.name) },
                         label = { Text("Recipe") },
-                        icon = {}
+                        icon = {Icon(imageVector = Icons.Default.Home,
+                            contentDescription = "Recipe")}
                     )
                     NavigationBarItem(
-                        selected = false,
+                        selected = currentScreen == Screens.Saved.name,
                         onClick = { navController.navigate(Screens.Saved.name) },
                         label = { Text("Saved") },
-                        icon = {}
+                        icon = {Icon(imageVector = Icons.Default.Star,
+                            contentDescription = "Saved")}
                     )
                 }
             } ) { innerPadding ->
