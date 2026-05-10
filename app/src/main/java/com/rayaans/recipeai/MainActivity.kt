@@ -28,6 +28,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import com.rayaans.recipeai.ui.ingredients.IngredientsViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.rayaans.recipeai.ui.RecipeViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val ingredientsViewModel = IngredientsViewModel()
+            val recipeViewModel = RecipeViewModel()
             val backStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = backStackEntry?.destination?.route
 
@@ -74,10 +76,10 @@ class MainActivity : ComponentActivity() {
                         IngredientsScreen(ingredientsViewModel)
                     }
                     composable(route = Screens.Recipe.name) {
-                        RecipeScreen()
+                        RecipeScreen(recipeViewModel)
                     }
                     composable(route = Screens.Saved.name) {
-                        SavedScreen()
+                        SavedScreen(recipeViewModel)
                     }
                 }
             }

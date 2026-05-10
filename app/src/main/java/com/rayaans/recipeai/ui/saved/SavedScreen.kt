@@ -21,11 +21,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rayaans.recipeai.data.Recipe
+import com.rayaans.recipeai.ui.RecipeViewModel
 
 @Composable
-fun SavedScreen() {
-    val savedRecipes = listOf("Fried rice", "Omelette", "Pasta")
-    var selectedRecipe by remember { mutableStateOf("") }
+fun SavedScreen(viewModel: RecipeViewModel) {
+    val savedRecipes by viewModel.savedRecipes.collectAsState()
+    var selectedRecipe by remember { mutableStateOf<Recipe?>(null) }
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Saved Recipes", modifier = Modifier.fillMaxWidth(),
@@ -54,11 +56,11 @@ fun SavedScreen() {
                         ) {
                             Column(modifier = Modifier.weight(1f).padding(8.dp)) {
                                 Text(
-                                    text = recipe, modifier = Modifier.padding(horizontal = 8.dp),
-                                    fontWeight = FontWeight.Bold, fontSize = 28.sp
+                                    text = recipe.title, modifier = Modifier.padding(horizontal = 8.dp),
+                                    fontWeight = FontWeight.Bold, fontSize = 22.sp
                                 )
                                 Text(
-                                    "Chicken, Pasta, Tomato, Garlic...",
+                                    text = recipe.ingredients.joinToString(),
                                     modifier = Modifier.padding(horizontal = 8.dp)
                                 )
                             }

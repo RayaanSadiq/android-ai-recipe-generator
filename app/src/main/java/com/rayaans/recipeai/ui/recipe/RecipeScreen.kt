@@ -15,18 +15,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.rayaans.recipeai.ui.RecipeViewModel
 
 @Composable
-fun RecipeScreen() {
+fun RecipeScreen(viewModel: RecipeViewModel) {
     // 0 = Ingredients tab, 1 = instructions tab
     var currentTab by remember { mutableIntStateOf(0) }
     var adjustments by remember { mutableStateOf("") }
 
-    val ingredients = listOf("•Chicken", "•Rice", "•Egg")
-    val instructions = listOf("1. Cook the rice", "2. Sear the chicken", "3. Mix them together with egg")
+
+    val recipe by viewModel.currentRecipe.collectAsState()
+    val ingredients = recipe?.ingredients ?: emptyList()
+    val instructions = recipe?.instructions ?: emptyList()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        Text("Chicken Fried Rice", modifier = Modifier.fillMaxWidth(),
+        Text(text = recipe?.title ?: "Recipe", modifier = Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -44,26 +47,35 @@ fun RecipeScreen() {
         }
 
         LazyColumn(modifier = Modifier.weight(1f)) {
-            if (currentTab == 0) {
-                items(ingredients) { ingredient ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 3.dp)
-                    ) {
-                        Text(text = ingredient,
-                        modifier = Modifier.padding(12.dp))
-                    }
-                }
+            if (ingredients.isEmpty() or instructions.isEmpty()) {
+                item {Text("No recipe generated yet",
+                    modifier = Modifier.padding(vertical = 128.dp).fillMaxSize(), textAlign = TextAlign.Center)}
             } else {
-                items(instructions) { instruction ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Text(text = instruction,
-                            modifier = Modifier.padding(16.dp))
+                if (currentTab == 0) {
+                    items(ingredients) { ingredient ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 3.dp)
+                        ) {
+                            Text(
+                                text = ingredient,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                    }
+                } else {
+                    items(instructions) { instruction ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = instruction,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -72,7 +84,7 @@ fun RecipeScreen() {
 
         TextField(
             value = adjustments,
-            onValueChange = {},
+            onValueChange = {adjustments = it},
             label = { Text ("Add any adjustments you want to make",
                 overflow = TextOverflow.Ellipsis) }, modifier = Modifier.fillMaxWidth(),
             minLines = 3, maxLines = 5)
