@@ -21,11 +21,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.rayaans.recipeai.data.Recipe
 import com.rayaans.recipeai.ui.RecipeViewModel
+import com.rayaans.recipeai.ui.Screens
 
 @Composable
-fun SavedScreen(viewModel: RecipeViewModel) {
+fun SavedScreen(viewModel: RecipeViewModel, navController: NavController) {
     val savedRecipes by viewModel.savedRecipes.collectAsState()
     var selectedRecipe by remember { mutableStateOf<Recipe?>(null) }
 
@@ -64,7 +66,10 @@ fun SavedScreen(viewModel: RecipeViewModel) {
                                     modifier = Modifier.padding(horizontal = 8.dp)
                                 )
                             }
-                            IconButton(onClick = {}) {
+                            IconButton(onClick = {
+                                viewModel.selectRecipe(recipe)
+                                navController.navigate(Screens.Recipe)
+                            }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                     contentDescription = "Open Recipe"

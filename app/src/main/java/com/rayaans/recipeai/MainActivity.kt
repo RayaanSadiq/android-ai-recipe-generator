@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                         RecipeScreen(recipeViewModel)
                     }
                     composable(route = Screens.Saved.name) {
-                        SavedScreen(recipeViewModel)
+                        SavedScreen(recipeViewModel, navController)
                     }
                 }
             }

@@ -93,7 +93,9 @@ fun RecipeScreen(viewModel: RecipeViewModel) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Button(onClick = {}) { Text("Adjust Recipe") }
             Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = {}) { Text("Save Recipe") }
+            Button(onClick = {
+                recipe?.let { viewModel.saveRecipe(it) }
+            }) { Text("Save Recipe") }
         }
     }
 }
