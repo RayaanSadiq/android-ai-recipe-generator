@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.padding(innerPadding)
                 ) {
                     composable(route = Screens.Ingredients.name) {
-                        IngredientsScreen(ingredientsViewModel)
+                        IngredientsScreen(ingredientsViewModel, recipeViewModel, navController)
                     }
                     composable(route = Screens.Recipe.name) {
                         RecipeScreen(recipeViewModel)

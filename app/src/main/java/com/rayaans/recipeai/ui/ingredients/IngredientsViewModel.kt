@@ -8,11 +8,18 @@ class IngredientsViewModel {
     private val _ingredientText = MutableStateFlow("")
     val ingredientText = _ingredientText.asStateFlow()
 
+    private val _extraReqs = MutableStateFlow("")
+    val extraReqs = _extraReqs.asStateFlow()
+
     private val _ingredients = MutableStateFlow<List<String>>(emptyList())
     val ingredients = _ingredients.asStateFlow()
 
     fun updateIngredientText(newText: String) {
         _ingredientText.value = newText
+    }
+
+    fun updateExtraRequests(newText: String) {
+        _extraReqs.value = newText
     }
 
     fun addIngredient() {

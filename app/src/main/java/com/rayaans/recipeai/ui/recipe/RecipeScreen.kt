@@ -27,6 +27,7 @@ fun RecipeScreen(viewModel: RecipeViewModel) {
     val recipe by viewModel.currentRecipe.collectAsState()
     val ingredients = recipe?.ingredients ?: emptyList()
     val instructions = recipe?.instructions ?: emptyList()
+    val generatedRecipe by viewModel.generatedRecipe.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(text = recipe?.title ?: "Recipe", modifier = Modifier.fillMaxWidth(),
@@ -82,6 +83,11 @@ fun RecipeScreen(viewModel: RecipeViewModel) {
         }
         Spacer(modifier = Modifier.height(16.dp))
 
+        if (generatedRecipe.isNotBlank()) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(generatedRecipe)
+        }
+
         TextField(
             value = adjustments,
             onValueChange = {adjustments = it},
@@ -91,7 +97,7 @@ fun RecipeScreen(viewModel: RecipeViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            Button(onClick = {}) { Text("Adjust Recipe") }
+            Button(onClick = {viewModel.generateRecipe()}) { Text("Adjust Recipe") }
             Spacer(modifier = Modifier.width(16.dp))
             Button(onClick = {
                 recipe?.let { viewModel.saveRecipe(it) }
