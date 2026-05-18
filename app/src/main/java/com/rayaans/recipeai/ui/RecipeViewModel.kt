@@ -47,22 +47,42 @@ class RecipeViewModel : ViewModel() {
                             "Use plain text only. Do not use markdown.")
                 }
             )
-            _generatedRecipe.value = response ?: "Unavailable"
+
+            if (response != null) {
+                val recipe = parseRecipe(response)
+                _currentRecipe.value = recipe
+            }
         }
     }
 
-//    fun parseRecipe(response: String): Recipe {
-//        val recipeLines = response.lines()
-//
-//        val title = recipeLines.firstOrNull() {it.isBlank()} ?: "Generated Recipe"
-//
-//        val ingredients = mutableListOf<String>()
-//        val instructions = mutableListOf<String>()
-//
-//        for (rawLine in recipeLines) {
-//            val line = rawLine.trim()
-//
-//
-//        }
-//    }
+    fun parseRecipe(response: String): Recipe {
+        val recipeLines = response.lines()
+
+        val title = recipeLines.firstOrNull() {it.isNotBlank()} ?: "Generated Recipe"
+
+        val ingredients = mutableListOf<String>()
+        val instructions = mutableListOf<String>()
+
+        var recipeSection = ""
+
+        for (rawLine in recipeLines) {
+            if (rawLine.isBlank()) { continue }
+            val line = rawLine.trim()
+
+            if (line.contains("ingredient", true)) {
+                recipeSection = "ingredients"
+
+            } else if (line.contains("instruction", true)) {
+                recipeSection = "instructions"
+
+            } else if (recipeSection == "ingredients") {
+                ingredients.add(line)
+
+            } else if (recipeSection == "instructions") {
+                instructions.add(line)
+            }
+        }
+
+        return Recipe(title, ingredients, instructions)
+    }
 }
