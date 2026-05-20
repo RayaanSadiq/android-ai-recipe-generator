@@ -67,24 +67,6 @@ class RecipeViewModel(private val recipeDao: RecipeDao) : ViewModel() {
         }
     }
 
-    fun sampleRecipe(): Recipe {
-        return Recipe(
-            title = "Chicken Fried Rice",
-            ingredients = listOf(
-                "Chicken",
-                "Rice",
-                "Egg"
-            ),
-            instructions = listOf(
-                "Cook rice",
-                "Cook chicken",
-                "Add egg",
-                "Mix together"
-
-            )
-        )
-    }
-
     fun parseRecipe(response: String, extraReqs: String): Recipe {
         val recipeLines = response.lines()
 

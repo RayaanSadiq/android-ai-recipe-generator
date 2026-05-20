@@ -43,8 +43,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val ingredientsViewModel = IngredientsViewModel()
-
         val database = Room.databaseBuilder(applicationContext,RecipeDatabase::class.java,
             "recipe_database").fallbackToDestructiveMigration().build()
         database.recipeDao()
