@@ -10,7 +10,6 @@ import androidx.annotation.RequiresPermission
 class ReminderReceiver: BroadcastReceiver() {
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun onReceive(context: Context, intent: Intent) {
-        println("Reminder received")
         val recipeTitle = intent.getStringExtra("recipeTitle") ?: "Recipe"
 
         NotificationHelper.showNotification(context, "Recipe Reminder",

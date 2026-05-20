@@ -59,7 +59,6 @@ class RecipeViewModel(private val recipeDao: RecipeDao) : ViewModel() {
             if (response != null && !response.contains("Error generating")) {
                 val recipe = parseRecipe(response, extraReqs)
                 _currentRecipe.value = recipe
-                android.util.Log.d("AI_RESPONSE", response)
             }else {
                 _errorMessage.value = "Failed to generate recipe."
             }

@@ -35,9 +35,6 @@ import com.rayaans.recipeai.ui.saved.SavedScreen
 import com.rayaans.recipeai.ui.theme.RecipeAITheme
 
 class MainActivity : ComponentActivity() {
-    private lateinit var recipeViewModel: RecipeViewModel
-    private lateinit var ingredientsViewModel: IngredientsViewModel
-
     @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +43,9 @@ class MainActivity : ComponentActivity() {
         val database = Room.databaseBuilder(applicationContext,RecipeDatabase::class.java,
             "recipe_database").fallbackToDestructiveMigration().build()
         database.recipeDao()
-        recipeViewModel = RecipeViewModel(database.recipeDao())
+        val recipeViewModel = RecipeViewModel(database.recipeDao())
+
+        val ingredientsViewModel = IngredientsViewModel()
 
         NotificationHelper.createNotificationChannel(this)
 
