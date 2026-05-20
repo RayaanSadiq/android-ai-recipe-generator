@@ -1,43 +1,59 @@
 package com.rayaans.recipeai
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.rayaans.recipeai.ui.theme.RecipeAITheme
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.rayaans.recipeai.ui.ingredients.IngredientsScreen
-import com.rayaans.recipeai.ui.recipe.RecipeScreen
-import com.rayaans.recipeai.ui.saved.SavedScreen
-import com.rayaans.recipeai.ui.Screens
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material3.Icon
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import com.rayaans.recipeai.ui.ingredients.IngredientsViewModel
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.rayaans.recipeai.ui.RecipeViewModel
+import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.rayaans.recipeai.data.db.RecipeDatabase
+import com.rayaans.recipeai.notifications.NotificationHelper
+import com.rayaans.recipeai.ui.Screens
+import com.rayaans.recipeai.ui.ingredients.IngredientsScreen
+import com.rayaans.recipeai.ui.ingredients.IngredientsViewModel
+import com.rayaans.recipeai.ui.recipe.RecipeScreen
+import com.rayaans.recipeai.ui.recipe.RecipeViewModel
+import com.rayaans.recipeai.ui.saved.SavedScreen
+import com.rayaans.recipeai.ui.theme.RecipeAITheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var ingredientsViewModel: IngredientsViewModel
+
+    @SuppressLint("ViewModelConstructorInComposable")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val ingredientsViewModel = IngredientsViewModel()
+
+        val database = Room.databaseBuilder(applicationContext,RecipeDatabase::class.java,
+            "recipe_database").fallbackToDestructiveMigration().build()
+        database.recipeDao()
+        recipeViewModel = RecipeViewModel(database.recipeDao())
+
+        NotificationHelper.createNotificationChannel(this)
+
         setContent {
             val navController = rememberNavController()
-            val ingredientsViewModel = IngredientsViewModel()
-            val recipeViewModel = RecipeViewModel()
             val backStackEntry by navController.currentBackStackEntryAsState()
             val currentScreen = backStackEntry?.destination?.route
 
@@ -76,7 +92,7 @@ class MainActivity : ComponentActivity() {
                         IngredientsScreen(ingredientsViewModel, recipeViewModel, navController)
                     }
                     composable(route = Screens.Recipe.name) {
-                        RecipeScreen(recipeViewModel)
+                        RecipeScreen(recipeViewModel, ingredientsViewModel, navController)
                     }
                     composable(route = Screens.Saved.name) {
                         SavedScreen(recipeViewModel, navController)

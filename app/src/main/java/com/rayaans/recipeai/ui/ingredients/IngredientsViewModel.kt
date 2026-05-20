@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class IngredientsViewModel {
+class IngredientsViewModel : ViewModel() {
     private val _ingredientText = MutableStateFlow("")
     val ingredientText = _ingredientText.asStateFlow()
 
@@ -27,6 +27,10 @@ class IngredientsViewModel {
             _ingredients.value += _ingredientText.value
             _ingredientText.value = ""
         }
+    }
+
+    fun loadRecipeIngredients(recipeIngredients: List<String>) {
+        _ingredients.value = recipeIngredients
     }
 
     fun removeIngredient(ingredient: String) {_ingredients.value -= ingredient}
